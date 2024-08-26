@@ -1,0 +1,3 @@
+[submodule "pod-conftest-parser"]
+	path = pod-conftest-parser
+	url = git@github.com:ilmoraunio/pod-conftest-parser.git

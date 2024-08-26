@@ -1,0 +1,9 @@
+# dev
+.idea/
+
+# build
+target/
+
+# testing
+*.json
+*.edn
