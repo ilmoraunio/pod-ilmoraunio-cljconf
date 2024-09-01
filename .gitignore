@@ -3,6 +3,8 @@
 
 # build
 target/
+bb
+pod-conftest-clj
 
 # testing
 *.json
