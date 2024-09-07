@@ -1,0 +1,24 @@
+---
+name: Run tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Babashka
+
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Clojure
+        uses: DeLaGuardo/setup-clojure@12.5
+        with:
+          bb: 1.3.190
+      - name: Build pod
+        run: make build-macos-aarch64
+      - name: Run tests
+        run: ./scripts/test
