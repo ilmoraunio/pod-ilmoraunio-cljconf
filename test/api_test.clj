@@ -7,5 +7,12 @@
 
 (deftest parse-test
   (testing "parse smoke test"
-    (is (= {"test.json" {"hello" [1.0 2.0 4.0]}}
-           (api/parse "test.json")))))
+    (is (= {"test-resources/test.json" {:hello [1 2 4]},
+            "test-resources/test.edn" {:foo :bar},
+            "test-resources/test.yaml" {"apiVersion" "v1",
+                                        "kind" "Service",
+                                        "metadata" {"name" "hello-kubernetes"},
+                                        "spec" {"type" "LoadBalancer",
+                                                "ports" [{"port" 80.0, "targetPort" 8080.0}],
+                                                "selector" {"app" "hello-kubernetes"}}}}
+           (api/parse "test-resources/**")))))
