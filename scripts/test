@@ -4,4 +4,4 @@ DIRNAME="$(dirname $0)"
 
 cd "$DIRNAME/.."
 
-bb --config test.edn test:bb
+bb --config test.bb.edn test:bb
