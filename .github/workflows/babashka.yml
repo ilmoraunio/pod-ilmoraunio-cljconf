@@ -18,6 +18,8 @@ jobs:
         uses: DeLaGuardo/setup-clojure@12.5
         with:
           bb: 1.3.190
+      - name: debug
+        run: pwd && ls -la
       - name: Build pod
         run: make build-macos-aarch64
       - name: Run tests
