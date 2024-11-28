@@ -1,9 +1,9 @@
-(ns pod-conftest-clj.core
+(ns pod-ilmoraunio-conftest-clj.core
   (:require [bencode.core :as bencode]
             [clojure.edn :as edn]
             [clojure.string :as str]
             [clojure.walk :as walk]
-            [pod-conftest-clj.api :as api])
+            [pod-ilmoraunio-conftest-clj.api :as api])
   (:import (java.io EOFException PushbackInputStream OutputStream))
   (:gen-class))
 
@@ -45,7 +45,7 @@
          (name %)
          %)
       {:format "edn"
-       :namespaces [(podify-namespace 'pod-conftest-clj.api 'pod-conftest-clj.api)]})))
+       :namespaces [(podify-namespace 'pod-ilmoraunio-conftest-clj.api 'pod-ilmoraunio-conftest-clj.api)]})))
 
 (defn dispatch
   [message]
@@ -57,7 +57,7 @@
         args (-> (get message "args") bytes->string edn/read-string)
         _ (debug "args" args)
         value (case var
-                "pod-conftest-clj.api/parse" (apply api/parse args))
+                "pod-ilmoraunio-conftest-clj.api/parse" (apply api/parse args))
         _ (debug "value" value)]
     {"value" (pr-str value)
      "id" id

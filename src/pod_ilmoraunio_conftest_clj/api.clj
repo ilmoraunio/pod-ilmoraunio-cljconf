@@ -1,5 +1,5 @@
-(ns pod-conftest-clj.api
-  (:require [pod.babashka.conftest-parser :as conftest-parser]
+(ns pod-ilmoraunio-conftest-clj.api
+  (:require [pod.ilmoraunio.conftest :as conftest]
             [babashka.fs :as fs]
             [cheshire.core :as json]
             [clojure.edn :as edn]
@@ -29,7 +29,7 @@
                                                (mapcat identity)
                                                (into {}))
           files-parsed-with-conftest-parser (if (seq parseable-files-with-conftest-parser)
-                                              (apply conftest-parser/parse (map str parseable-files-with-conftest-parser))
+                                              (apply conftest/parse (map str parseable-files-with-conftest-parser))
                                               [])]
       (apply merge-with merge
              (cond-> []

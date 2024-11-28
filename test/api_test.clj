@@ -2,8 +2,8 @@
   (:require [babashka.pods :as pods]
             [clojure.test :refer [deftest is testing]]))
 
-(pods/load-pod "./pod-conftest-clj")
-(require '[pod-conftest-clj.api :as api])
+(pods/load-pod "./pod-ilmoraunio-conftest-clj")
+(require '[pod-ilmoraunio-conftest-clj.api :as api])
 
 (deftest parse-test
   (testing "parse smoke test"
