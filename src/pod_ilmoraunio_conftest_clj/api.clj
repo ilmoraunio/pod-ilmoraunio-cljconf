@@ -10,7 +10,7 @@
 
 (defn edn-read
   [s]
-  (edn/read (PushbackReader. (io/reader (.getBytes s)))))
+  (edn/read {:default #(str "#" %1 " " %2)} (PushbackReader. (io/reader (.getBytes s)))))
 
 (defn parse
   [& filenames]

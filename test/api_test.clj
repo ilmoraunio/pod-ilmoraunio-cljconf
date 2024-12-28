@@ -8,7 +8,8 @@
 (deftest parse-test
   (testing "parse smoke test"
     (is (= {"test-resources/test.json" {:hello [1 2 4]},
-            "test-resources/test.edn" {:foo :bar},
+            "test-resources/test.edn" {:foo :bar
+                                       :duration "#duration 20m"},
             "test-resources/test.yaml" {"apiVersion" "v1",
                                         "kind" "Service",
                                         "metadata" {"name" "hello-kubernetes"},
