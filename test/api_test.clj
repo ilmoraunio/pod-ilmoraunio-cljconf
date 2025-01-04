@@ -15,5 +15,7 @@
                                         "metadata" {"name" "hello-kubernetes"},
                                         "spec" {"type" "LoadBalancer",
                                                 "ports" [{"port" 80.0, "targetPort" 8080.0}],
-                                                "selector" {"app" "hello-kubernetes"}}}}
+                                                "selector" {"app" "hello-kubernetes"}}}
+            "test-resources/.dockerignore" [[{"Original" ".idea", "Kind" "Path", "Value" ".idea"}
+                                             {"Value" "", "Original" "", "Kind" "Empty"}]]}
            (api/parse "test-resources/**")))))

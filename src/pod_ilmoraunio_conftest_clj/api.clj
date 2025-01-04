@@ -17,7 +17,7 @@
   (let [{parseable-files-with-native-parser true
          parseable-files-with-conftest-parser false}
         (group-by #(boolean (supported-native-parser (fs/extension %)))
-                  (mapcat #(fs/glob "." %) filenames))]
+                  (mapcat #(fs/glob "." % {:hidden true}) filenames))]
     (let [files-parsed-with-native-parser (->> (pmap (fn [f]
                                                    (let [filename (str f)
                                                          extension (fs/extension f)
