@@ -57,7 +57,8 @@
         args (-> (get message "args") bytes->string edn/read-string)
         _ (debug "args" args)
         value (case var
-                "pod-ilmoraunio-conftest-clj.api/parse" (apply api/parse args))
+                "pod-ilmoraunio-conftest-clj.api/parse" (apply api/parse args)
+                "pod-ilmoraunio-conftest-clj.api/parse-go" (apply api/parse-go args))
         _ (debug "value" value)]
     {"value" (pr-str value)
      "id" id
