@@ -61,7 +61,11 @@
                                                              extension (fs/extension f)
                                                              contents (slurp filename)]
                                                          {filename (case extension
-                                                                     "json" (json/decode contents true)
+                                                                     "json" (json/decode contents
+                                                                                         (fn [k]
+                                                                                           (cond
+                                                                                             (clojure.string/starts-with? k "@") k
+                                                                                             :else (keyword k))))
                                                                      "edn" (edn-read contents))}))
                                                      parseable-files-with-native-parser)
                                                (mapcat identity)

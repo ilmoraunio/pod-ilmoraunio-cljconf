@@ -7,7 +7,7 @@
 
 (deftest parse-test
   (testing "parse"
-    (is (= {"test-resources/test.json" {:hello [1 2 4]},
+    (is (= {"test-resources/test.json" {:hello [1 2 4], "@foo" "bar"},
             "test-resources/test.edn" {:foo :bar
                                        :duration "#duration 20m"},
             "test-resources/test.yaml" {"apiVersion" "v1",
@@ -26,7 +26,7 @@
                                         "spec" {"ports" [{"port" 80.0, "targetPort" 8080.0}],
                                                 "selector" {"app" "hello-kubernetes"},
                                                 "type" "LoadBalancer"}},
-            "test-resources/test.json" {"hello" [1.0 2.0 4.0]},
+            "test-resources/test.json" {"hello" [1.0 2.0 4.0], "@foo" "bar"},
             "test-resources/.dockerignore" [[{"Kind" "Path", "Value" ".idea", "Original" ".idea"}
                                              {"Original" "", "Kind" "Empty", "Value" ""}]],
             "test-resources/test.edn" {":foo" ":bar", ":duration" "#duration 20m"}}
