@@ -58,7 +58,9 @@
         _ (debug "args" args)
         value (case var
                 "pod-ilmoraunio-conftest-clj.api/parse" (apply api/parse args)
-                "pod-ilmoraunio-conftest-clj.api/parse-go" (apply api/parse-go args))
+                "pod-ilmoraunio-conftest-clj.api/parse-as" (apply api/parse-as args)
+                "pod-ilmoraunio-conftest-clj.api/parse-go" (apply api/parse-go args)
+                "pod-ilmoraunio-conftest-clj.api/parse-go-as" (apply api/parse-go-as args))
         _ (debug "value" value)]
     {"value" (pr-str value)
      "id" id
