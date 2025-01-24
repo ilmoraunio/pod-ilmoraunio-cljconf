@@ -12,6 +12,13 @@
   [s]
   (edn/read {:default #(str "#" %1 " " %2)} (PushbackReader. (io/reader (.getBytes s)))))
 
+(defn ls-files
+  [& dir-or-filename]
+  (mapcat #(if (fs/directory? %)
+             (fs/list-dirs [%] (fn [p] (and (fs/regular-file? p) (not (fs/executable? p)))))
+             (filter fs/regular-file? (fs/glob "." % {:hidden true})))
+          dir-or-filename))
+
 (defn parse-go
   "Attempts to parse `filenames` using only Go parsers. Will automatically try to determine parser based on filename extension.
 
@@ -28,7 +35,7 @@
                                   \"metadata\" {\"name\" \"hello-kubernetes\"}}}
    ```"
   [& filenames]
-  (let [files (mapcat #(fs/glob "." % {:hidden true}) filenames)]
+  (let [files (apply ls-files filenames)]
     (apply conftest/parse (map str files))))
 
 (defn parse-go-as
@@ -47,7 +54,7 @@
                                   \"metadata\" {\"name\" \"hello-kubernetes\"}}}
    ```"
   [parser & filenames]
-  (let [files (mapcat #(fs/glob "." % {:hidden true}) filenames)]
+  (let [files (apply ls-files filenames)]
     (apply (partial conftest/parse-as parser) (map str files))))
 
 (defn -parse
@@ -55,7 +62,7 @@
   (let [{parseable-files-with-native-parser true
          parseable-files-with-conftest-parser false}
         (group-by #(boolean (supported-native-parser (or parser (fs/extension %))))
-                  (mapcat #(fs/glob "." % {:hidden true}) filenames))]
+                  (apply ls-files filenames))]
     (let [files-parsed-with-native-parser (->> (pmap (fn [f]
                                                        (let [filename (str f)
                                                              parser (or parser (fs/extension f))
