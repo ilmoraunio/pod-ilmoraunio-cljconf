@@ -5,17 +5,20 @@
 (pods/load-pod "./pod-ilmoraunio-conftest-clj")
 (require '[pod-ilmoraunio-conftest-clj.api :as api])
 
+(set! *data-readers* {'ordered/map #'flatland.ordered.map/ordered-map})
+
 (deftest parse-test
   (testing "parse"
     (is (= {"test-resources/test.json" {:hello [1 2 4], "@foo" "bar"},
             "test-resources/test.edn" {:foo :bar
                                        :duration "#duration 20m"},
-            "test-resources/test.yaml" {"apiVersion" "v1",
-                                        "kind" "Service",
-                                        "metadata" {"name" "hello-kubernetes"},
-                                        "spec" {"type" "LoadBalancer",
-                                                "ports" [{"port" 80.0, "targetPort" 8080.0}],
-                                                "selector" {"app" "hello-kubernetes"}}}
+            "test-resources/test.yaml" #ordered/map([:apiVersion "v1"]
+                                                    [:kind "Service"]
+                                                    [:metadata #ordered/map([:name "hello-kubernetes"])]
+                                                    [:spec
+                                                     #ordered/map([:type "LoadBalancer"]
+                                                                  [:ports '(#ordered/map([:port 80] [:targetPort 8080]))]
+                                                                  [:selector #ordered/map([:app "hello-kubernetes"])])])
             "test-resources/.dockerignore" [[{"Original" ".idea", "Kind" "Path", "Value" ".idea"}
                                              {"Value" "", "Original" "", "Kind" "Empty"}]]}
            (api/parse "test-resources/*{edn,json,yaml,.dockerignore}"))))
@@ -44,13 +47,14 @@
             {"test-resources/test.edn" {":duration" "#duration 20m", ":foo" ":bar"}}]
            [(api/parse-as "edn" "test-resources/test.edn")
             (api/parse-go-as "edn" "test-resources/test.edn")]))
-    (is (= {"test-resources/test.json" {"@foo" "bar", "hello" [1.0 2.0 4.0]},
-            "test-resources/test.yaml" {"spec" {"ports" [{"port" 80.0, "targetPort" 8080.0}],
-                                                "selector" {"app" "hello-kubernetes"},
-                                                "type" "LoadBalancer"},
-                                        "apiVersion" "v1",
-                                        "kind" "Service",
-                                        "metadata" {"name" "hello-kubernetes"}}}
+    (is (= {"test-resources/test.json" #ordered/map([:hello [1 2 4]] ["@foo" "bar"]),
+            "test-resources/test.yaml" #ordered/map([:apiVersion "v1"]
+                                                    [:kind "Service"]
+                                                    [:metadata #ordered/map([:name "hello-kubernetes"])]
+                                                    [:spec
+                                                     #ordered/map([:type "LoadBalancer"]
+                                                                  [:ports '(#ordered/map([:port 80] [:targetPort 8080]))]
+                                                                  [:selector #ordered/map([:app "hello-kubernetes"])])])}
            (api/parse-as "yaml" "test-resources/test.json" "test-resources/test.yaml")))
     (is (thrown-with-msg? Exception
                           #"unsupported SPDX version"
@@ -73,12 +77,13 @@
   (testing "support directories"
     (is (= {"test-resources/test.json" {:hello [1 2 4], "@foo" "bar"},
             "test-resources/test.edn" {:foo :bar, :duration "#duration 20m"},
-            "test-resources/test.yaml" {"apiVersion" "v1",
-                                        "kind" "Service",
-                                        "metadata" {"name" "hello-kubernetes"},
-                                        "spec" {"ports" [{"port" 80.0, "targetPort" 8080.0}],
-                                                "selector" {"app" "hello-kubernetes"},
-                                                "type" "LoadBalancer"}},
+            "test-resources/test.yaml" #ordered/map([:apiVersion "v1"]
+                                                    [:kind "Service"]
+                                                    [:metadata #ordered/map([:name "hello-kubernetes"])]
+                                                    [:spec
+                                                     #ordered/map([:type "LoadBalancer"]
+                                                                  [:ports '(#ordered/map([:port 80] [:targetPort 8080]))]
+                                                                  [:selector #ordered/map([:app "hello-kubernetes"])])]),
             "test-resources/.dockerignore" [[{"Original" ".idea", "Kind" "Path", "Value" ".idea"}
                                              {"Kind" "Empty", "Value" "", "Original" ""}]]}
            (api/parse "test-resources")

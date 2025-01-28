@@ -45,6 +45,7 @@
          (name %)
          %)
       {:format "edn"
+       :readers {"ordered/map" "flatland.ordered.map/ordered-map"}
        :namespaces [(podify-namespace 'pod-ilmoraunio-conftest-clj.api 'pod-ilmoraunio-conftest-clj.api)]})))
 
 (defn dispatch
