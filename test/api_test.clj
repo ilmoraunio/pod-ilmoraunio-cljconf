@@ -19,9 +19,16 @@
                                                      #ordered/map([:type "LoadBalancer"]
                                                                   [:ports '(#ordered/map([:port 80] [:targetPort 8080]))]
                                                                   [:selector #ordered/map([:app "hello-kubernetes"])])])
+            "test-resources/test.yml" #ordered/map([:apiVersion "v1"]
+                                                   [:kind "Service"]
+                                                   [:metadata #ordered/map([:name "hello-kubernetes-2"])]
+                                                   [:spec
+                                                    #ordered/map([:type "LoadBalancer"]
+                                                                 [:ports '(#ordered/map([:port 80] [:targetPort 8080]))]
+                                                                 [:selector #ordered/map([:app "hello-kubernetes"])])])
             "test-resources/.dockerignore" [[{"Original" ".idea", "Kind" "Path", "Value" ".idea"}
                                              {"Value" "", "Original" "", "Kind" "Empty"}]]}
-           (api/parse "test-resources/*{edn,json,yaml,.dockerignore}"))))
+           (api/parse "test-resources/*{edn,json,yaml,yml,.dockerignore}"))))
   (testing "parse-as"
     (is (= {"test-resources/hocon/hocon.conf" {"play" {"editor" "<<unknown value>>",
                                                        "server" {"debug" {"addDebugInfoToRequests" false},
@@ -54,8 +61,15 @@
                                                     [:spec
                                                      #ordered/map([:type "LoadBalancer"]
                                                                   [:ports '(#ordered/map([:port 80] [:targetPort 8080]))]
-                                                                  [:selector #ordered/map([:app "hello-kubernetes"])])])}
-           (api/parse-as "yaml" "test-resources/test.json" "test-resources/test.yaml")))
+                                                                  [:selector #ordered/map([:app "hello-kubernetes"])])])
+            "test-resources/test.yml" #ordered/map([:apiVersion "v1"]
+                                                   [:kind "Service"]
+                                                   [:metadata #ordered/map([:name "hello-kubernetes-2"])]
+                                                   [:spec
+                                                    #ordered/map([:type "LoadBalancer"]
+                                                                 [:ports '(#ordered/map([:port 80] [:targetPort 8080]))]
+                                                                 [:selector #ordered/map([:app "hello-kubernetes"])])])}
+           (api/parse-as "yaml" "test-resources/test.json" "test-resources/test.yaml" "test-resources/test.yml")))
     (is (thrown-with-msg? Exception
                           #"unsupported SPDX version"
                           (api/parse-as "spdx" "deps.edn"))))
@@ -66,11 +80,17 @@
                                         "spec" {"ports" [{"port" 80.0, "targetPort" 8080.0}],
                                                 "selector" {"app" "hello-kubernetes"},
                                                 "type" "LoadBalancer"}},
+            "test-resources/test.yml" {"apiVersion" "v1",
+                                       "kind" "Service",
+                                       "metadata" {"name" "hello-kubernetes-2"},
+                                       "spec" {"ports" [{"port" 80.0, "targetPort" 8080.0}],
+                                               "selector" {"app" "hello-kubernetes"},
+                                               "type" "LoadBalancer"}}
             "test-resources/test.json" {"hello" [1.0 2.0 4.0], "@foo" "bar"},
             "test-resources/.dockerignore" [[{"Kind" "Path", "Value" ".idea", "Original" ".idea"}
                                              {"Original" "", "Kind" "Empty", "Value" ""}]],
             "test-resources/test.edn" {":foo" ":bar", ":duration" "#duration 20m"}}
-           (api/parse-go "test-resources/*{edn,json,yaml,.dockerignore}"))))
+           (api/parse-go "test-resources/*{edn,json,yaml,yml,.dockerignore}"))))
   (testing "parse-go-as"
     (is (= {"test-resources/test.edn" {":foo" ":bar", ":duration" "#duration 20m"}}
            (api/parse-go-as "edn" "test-resources/test.edn"))))
@@ -84,11 +104,18 @@
                                                      #ordered/map([:type "LoadBalancer"]
                                                                   [:ports '(#ordered/map([:port 80] [:targetPort 8080]))]
                                                                   [:selector #ordered/map([:app "hello-kubernetes"])])]),
+            "test-resources/test.yml" #ordered/map([:apiVersion "v1"]
+                                                   [:kind "Service"]
+                                                   [:metadata #ordered/map([:name "hello-kubernetes-2"])]
+                                                   [:spec
+                                                    #ordered/map([:type "LoadBalancer"]
+                                                                 [:ports '(#ordered/map([:port 80] [:targetPort 8080]))]
+                                                                 [:selector #ordered/map([:app "hello-kubernetes"])])])
             "test-resources/.dockerignore" [[{"Original" ".idea", "Kind" "Path", "Value" ".idea"}
                                              {"Kind" "Empty", "Value" "", "Original" ""}]]}
            (api/parse "test-resources")
            (api/parse "test-resources/")
-           (api/parse "test-resources" "test-resources/" "test-resources/*{edn,json,yaml,.dockerignore}"))))
+           (api/parse "test-resources" "test-resources/" "test-resources/*{edn,json,yaml,yml,.dockerignore}"))))
   (testing "yaml"
     (testing "support multi-documents"
       (is (= {"test-resources/yaml/combine.yaml" [#ordered/map([:apiVersion "apps/v1"]

@@ -7,7 +7,7 @@
             [clojure.java.io :as io])
   (:import (java.io PushbackReader)))
 
-(def supported-native-parser #{"json" "edn" "yaml"})
+(def supported-native-parser #{"json" "edn" "yaml" "yml"})
 
 (defn edn-read
   [s]
@@ -85,16 +85,16 @@
                                                                                              (clojure.string/starts-with? k "@") k
                                                                                              :else (keyword k))))
                                                                      "edn" (edn-read contents)
-                                                                     "yaml" (let [parsed (yaml/parse-string contents {:unknown-tag-fn :value
-                                                                                                                      :load-all true
-                                                                                                                      :key-fn (fn [{:keys [key]}]
-                                                                                                                                (cond
-                                                                                                                                  (clojure.string/starts-with? key "@") key
-                                                                                                                                  (re-find #":" key) key
-                                                                                                                                  :else (keyword key)))})]
-                                                                              (if (= (count parsed) 1)
-                                                                                (first parsed)
-                                                                                parsed)))}))
+                                                                     ("yaml" "yml") (let [parsed (yaml/parse-string contents {:unknown-tag-fn :value
+                                                                                                                              :load-all true
+                                                                                                                              :key-fn (fn [{:keys [key]}]
+                                                                                                                                        (cond
+                                                                                                                                          (clojure.string/starts-with? key "@") key
+                                                                                                                                          (re-find #":" key) key
+                                                                                                                                          :else (keyword key)))})]
+                                                                                      (if (= (count parsed) 1)
+                                                                                        (first parsed)
+                                                                                        parsed)))}))
                                                      parseable-files-with-native-parser)
                                                (mapcat identity)
                                                (into {}))
