@@ -88,4 +88,58 @@
                                              {"Kind" "Empty", "Value" "", "Original" ""}]]}
            (api/parse "test-resources")
            (api/parse "test-resources/")
-           (api/parse "test-resources" "test-resources/" "test-resources/*{edn,json,yaml,.dockerignore}")))))
+           (api/parse "test-resources" "test-resources/" "test-resources/*{edn,json,yaml,.dockerignore}"))))
+  (testing "yaml"
+    (testing "support multi-documents"
+      (is (= {"test-resources/yaml/combine.yaml" [#ordered/map([:apiVersion "apps/v1"]
+                                                               [:kind "Deployment"]
+                                                               [:metadata #ordered/map([:name "hello-kubernetes"])]
+                                                               [:spec
+                                                                #ordered/map([:replicas 3]
+                                                                             [:selector
+                                                                              #ordered/map([:matchLabels
+                                                                                            #ordered/map([:app "hello-kubernetes"])])]
+                                                                             [:template
+                                                                              #ordered/map([:metadata
+                                                                                            #ordered/map([:labels
+                                                                                                          #ordered/map([:app
+                                                                                                                        "hello-kubernetes"])])]
+                                                                                           [:spec
+                                                                                            #ordered/map([:containers
+                                                                                                          [#ordered/map([:name
+                                                                                                                         "hello-kubernetes"]
+                                                                                                                        [:image
+                                                                                                                         "paulbouwer/hello-kubernetes:1.5"]
+                                                                                                                        [:ports
+                                                                                                                         [#ordered/map([:containerPort
+                                                                                                                                        8080])]])]])])])])
+                                                  #ordered/map([:apiVersion "apps/v1"]
+                                                               [:kind "Deployment"]
+                                                               [:metadata #ordered/map([:name "goodbye-kubernetes"])]
+                                                               [:spec
+                                                                #ordered/map([:replicas 3]
+                                                                             [:selector
+                                                                              #ordered/map([:matchLabels
+                                                                                            #ordered/map([:app "goodbye-kubernetes"])])]
+                                                                             [:template
+                                                                              #ordered/map([:metadata
+                                                                                            #ordered/map([:labels
+                                                                                                          #ordered/map([:app
+                                                                                                                        "goodbye-kubernetes"])])]
+                                                                                           [:spec
+                                                                                            #ordered/map([:containers
+                                                                                                          [#ordered/map([:name
+                                                                                                                         "goodbye-kubernetes"]
+                                                                                                                        [:image
+                                                                                                                         "paulbouwer/hello-kubernetes:1.5"]
+                                                                                                                        [:ports
+                                                                                                                         [#ordered/map([:containerPort
+                                                                                                                                        8080])]])]])])])])
+                                                  #ordered/map([:apiVersion "v1"]
+                                                               [:kind "Service"]
+                                                               [:metadata #ordered/map([:name "hello-kubernetes"])]
+                                                               [:spec
+                                                                #ordered/map([:type "LoadBalancer"]
+                                                                             [:ports [#ordered/map([:port 80] [:targetPort 8080])]]
+                                                                             [:selector #ordered/map([:app "hello-kubernetes"])])])]}
+             (api/parse "test-resources/yaml/combine.yaml"))))))

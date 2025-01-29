@@ -85,10 +85,14 @@
                                                                                              (clojure.string/starts-with? k "@") k
                                                                                              :else (keyword k))))
                                                                      "edn" (edn-read contents)
-                                                                     "yaml" (yaml/parse-string contents {:key-fn (fn [{:keys [key]}]
-                                                                                                                   (cond
-                                                                                                                     (clojure.string/starts-with? key "@") key
-                                                                                                                     :else (keyword key)))}))}))
+                                                                     "yaml" (let [parsed (yaml/parse-string contents {:load-all true
+                                                                                                                      :key-fn (fn [{:keys [key]}]
+                                                                                                                                (cond
+                                                                                                                                  (clojure.string/starts-with? key "@") key
+                                                                                                                                  :else (keyword key)))})]
+                                                                              (if (= (count parsed) 1)
+                                                                                (first parsed)
+                                                                                parsed)))}))
                                                      parseable-files-with-native-parser)
                                                (mapcat identity)
                                                (into {}))
