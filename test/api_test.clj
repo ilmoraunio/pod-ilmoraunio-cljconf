@@ -142,4 +142,95 @@
                                                                 #ordered/map([:type "LoadBalancer"]
                                                                              [:ports [#ordered/map([:port 80] [:targetPort 8080])]]
                                                                              [:selector #ordered/map([:app "hello-kubernetes"])])])]}
-             (api/parse "test-resources/yaml/combine.yaml"))))))
+             (api/parse "test-resources/yaml/combine.yaml"))))
+    (testing "tolerate unknown tags"
+      (is (= {"test-resources/yaml/lambda.yaml" #ordered/map([:AWSTemplateFormatVersion "2010-09-09"]
+                                                             [:Transform "AWS::Serverless-2016-10-31"]
+                                                             [:Description
+                                                              "proccess loadnewpackages events send to logLocationFinder."]
+                                                             [:Parameters
+                                                              #ordered/map([:DatadogLambda
+                                                                            #ordered/map([:Type "String"]
+                                                                                         [:Default
+                                                                                          "arn:aws:lambda:us-east-1:12312312312312:function:datadog-log-forwarder"])])]
+                                                             [:Resources
+                                                              #ordered/map([:LambdaFunction
+                                                                            #ordered/map([:Type "AWS::Serverless::Function"]
+                                                                                         [:Properties
+                                                                                          #ordered/map([:Handler "main.handler"]
+                                                                                                       [:Runtime "python2.7"]
+                                                                                                       [:Environment
+                                                                                                        #ordered/map([:Variables
+                                                                                                                      ["dbhost:mydb"
+                                                                                                                       "dbuser:root"
+                                                                                                                       "dbpassword:mypassword"]])]
+                                                                                                       [:CodeUri "dist"]
+                                                                                                       [:MemorySize 128]
+                                                                                                       [:Timeout 300]
+                                                                                                       [:Policies
+                                                                                                        [#ordered/map([:Statement
+                                                                                                                       [#ordered/map([:Action
+                                                                                                                                      ["sqs:*"
+                                                                                                                                       "logs:CreateLogGroup"
+                                                                                                                                       "logs:CreateLogStream"
+                                                                                                                                       "lambda:put"]]
+                                                                                                                                     [:Effect
+                                                                                                                                      "Allow"]
+                                                                                                                                     [:Resource
+                                                                                                                                      ["arn:aws:sqs:us-east-1:12321312312:vuln_search_eng_package_names{{ENV}}"
+                                                                                                                                       "arn:aws:sqs:us-east-1:12312312312:vuln_search_eng_package_repos{{ENV}}"]])]])
+                                                                                                         #ordered/map([:Statement
+                                                                                                                       [#ordered/map([:Action
+                                                                                                                                      "*"]
+                                                                                                                                     [:Effect
+                                                                                                                                      "Allow"]
+                                                                                                                                     [:Resource
+                                                                                                                                      ["arn:aws:sqs:us-east-1:12321312312:vuln_search_eng_package_names{{ENV}}"
+                                                                                                                                       "arn:aws:sqs:us-east-1:12312312312:vuln_search_eng_package_repos{{ENV}}"]])]])
+                                                                                                         #ordered/map([:Statement
+                                                                                                                       [#ordered/map([:Action
+                                                                                                                                      ["sqs:Read"]]
+                                                                                                                                     [:Effect
+                                                                                                                                      "Allow"]
+                                                                                                                                     [:Resource
+                                                                                                                                      "*"])]])]]
+                                                                                                       [:Events
+                                                                                                        #ordered/map([:Stream
+                                                                                                                      #ordered/map([:Type
+                                                                                                                                    "SQS"]
+                                                                                                                                   [:Properties
+                                                                                                                                    #ordered/map([:Queue
+                                                                                                                                                  "arn:aws:sqs:us-east-1:321321312:vuln_search_eng_package_names{{ENV}}"]
+                                                                                                                                                 [:BatchSize
+                                                                                                                                                  1])])])])])]
+                                                                           [:DatadogLambdaLogGroupPermission
+                                                                            #ordered/map([:Type "AWS::Lambda::Permission"]
+                                                                                         [:Properties
+                                                                                          #ordered/map([:Action
+                                                                                                        "lambda:InvokeFunction"]
+                                                                                                       [:FunctionName
+                                                                                                        "DatadogLambda"]
+                                                                                                       [:Principal
+                                                                                                        "logs.us-east-1.amazonaws.com"]
+                                                                                                       [:SourceArn
+                                                                                                        "LambdaFunctionLogGroup.Arn"])])]
+                                                                           [:LambdaFunctionLogGroup
+                                                                            #ordered/map([:DependsOn "LambdaFunction"]
+                                                                                         [:Properties
+                                                                                          #ordered/map([:LogGroupName
+                                                                                                        #ordered/map(["Fn::Join"
+                                                                                                                      [""
+                                                                                                                       ["/aws/lambda/"
+                                                                                                                        #ordered/map([:Ref
+                                                                                                                                      "LambdaFunction"])]]])]
+                                                                                                       [:RetentionInDays 14])]
+                                                                                         [:Type "AWS::Logs::LogGroup"])]
+                                                                           [:LambdaSubscriptionFilter
+                                                                            #ordered/map([:Type "AWS::Logs::SubscriptionFilter"]
+                                                                                         [:Properties
+                                                                                          #ordered/map([:LogGroupName
+                                                                                                        "LambdaFunctionLogGroup"]
+                                                                                                       [:DestinationArn
+                                                                                                        "DatadogLambda"]
+                                                                                                       [:FilterPattern ""])])])])}))
+      (api/parse "test-resources/yaml/lambda.yaml"))))

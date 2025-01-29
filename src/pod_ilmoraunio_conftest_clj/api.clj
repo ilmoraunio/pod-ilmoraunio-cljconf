@@ -85,10 +85,12 @@
                                                                                              (clojure.string/starts-with? k "@") k
                                                                                              :else (keyword k))))
                                                                      "edn" (edn-read contents)
-                                                                     "yaml" (let [parsed (yaml/parse-string contents {:load-all true
+                                                                     "yaml" (let [parsed (yaml/parse-string contents {:unknown-tag-fn :value
+                                                                                                                      :load-all true
                                                                                                                       :key-fn (fn [{:keys [key]}]
                                                                                                                                 (cond
                                                                                                                                   (clojure.string/starts-with? key "@") key
+                                                                                                                                  (re-find #":" key) key
                                                                                                                                   :else (keyword key)))})]
                                                                               (if (= (count parsed) 1)
                                                                                 (first parsed)
