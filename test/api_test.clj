@@ -72,7 +72,7 @@
            (api/parse-as "yaml" "test-resources/test.json" "test-resources/test.yaml" "test-resources/test.yml")))
     (is (thrown-with-msg? Exception
                           #"unsupported SPDX version"
-                          (api/parse-as "spdx" "deps.edn"))))
+                          (api/parse-as "spdx" "test-resources/test.edn"))))
   (testing "parse-go"
     (is (= {"test-resources/test.yaml" {"apiVersion" "v1",
                                         "kind" "Service",
