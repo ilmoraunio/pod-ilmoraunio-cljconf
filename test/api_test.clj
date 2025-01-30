@@ -70,6 +70,7 @@
                                                                  [:ports '(#ordered/map([:port 80] [:targetPort 8080]))]
                                                                  [:selector #ordered/map([:app "hello-kubernetes"])])])}
            (api/parse-as "yaml" "test-resources/test.json" "test-resources/test.yaml" "test-resources/test.yml")))
+    (is (= {} (api/parse-as "spdx" "deps.edn")))
     (is (thrown-with-msg? Exception
                           #"unsupported SPDX version"
                           (api/parse-as "spdx" "deps.edn"))))
