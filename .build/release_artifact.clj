@@ -12,7 +12,7 @@
     (println "File" file)
     (do (assert file "File name must be provided")
         (ghr/overwrite-asset {:org "ilmoraunio"
-                              :repo "pod-ilmoraunio-conftest-clj"
+                              :repo "pod-ilmoraunio-cljconf"
                               :file file
                               :tag (str "v" current-version)
                               :draft true
