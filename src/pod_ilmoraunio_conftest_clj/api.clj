@@ -17,7 +17,17 @@
   [& dir-or-filename]
   (mapcat #(if (fs/directory? %)
              (fs/list-dirs [%] (fn [p] (and (fs/regular-file? p) (not (fs/executable? p)))))
-             (filter fs/regular-file? (fs/glob "." % {:hidden true})))
+             (let [[relative-path filename] (split-with
+                                              (partial = "..")
+                                              (clojure.string/split
+                                                (str (fs/relativize
+                                                       (fs/cwd)
+                                                       (fs/canonicalize %)))
+                                                #"/"))]
+               (filter fs/regular-file?
+                       (fs/glob (clojure.string/join "/" relative-path)
+                                (clojure.string/join "/" filename)
+                                {:hidden true}))))
           dir-or-filename))
 
 (defn parse-go
