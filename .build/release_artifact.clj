@@ -6,7 +6,7 @@
 
 (defn release [{:keys [file]}]
   (let [ght (System/getenv "GITHUB_TOKEN")
-        current-version (-> (slurp "resources/POD_ILMORAUNIO_CONFTEST_CLJ")
+        current-version (-> (slurp "resources/POD_ILMORAUNIO_CLJCONF")
                             str/trim)]
     (when ght (println "Github token found"))
     (println "File" file)
