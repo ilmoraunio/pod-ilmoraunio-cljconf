@@ -18,7 +18,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
       - name: Read version to environment
-        run: echo "VERSION=$(cat resources/POD_ILMORAUNIO_CONFTEST_CLJ)" >> $GITHUB_ENV
+        run: echo "VERSION=$(cat resources/POD_ILMORAUNIO_CLJCONF)" >> $GITHUB_ENV
       - name: Install babashka
         uses: DeLaGuardo/setup-clojure@13.0
         with:
@@ -36,17 +36,17 @@ jobs:
       - name: Build pod-ilmoraunio-conftest binary
         run: cd pod-ilmoraunio-conftest && go build
       - name: Build uberjar
-        run: bb uberjar target/pod-ilmoraunio-conftest-clj.jar -m pod-ilmoraunio-conftest-clj.core
+        run: bb uberjar target/pod-ilmoraunio-cljconf.jar -m pod-ilmoraunio-cljconf.core
       - name: Build binary
-        run: cat $(which bb) target/pod-ilmoraunio-conftest-clj.jar > pod-ilmoraunio-conftest-clj && chmod +x pod-ilmoraunio-conftest-clj
+        run: cat $(which bb) target/pod-ilmoraunio-cljconf.jar > pod-ilmoraunio-cljconf && chmod +x pod-ilmoraunio-cljconf
       - name: Test build
         run: ./scripts/test
       - name: Debug
         run: ls -lart
       - name: Produce artifact
-        run: zip pod-ilmoraunio-conftest-clj-$VERSION-macos-aarch64.zip pod-ilmoraunio-conftest-clj
+        run: zip pod-ilmoraunio-cljconf-$VERSION-macos-aarch64.zip pod-ilmoraunio-cljconf
       - name: Release artifact
-        run: bb --config bb.ci.edn release-artifact --file pod-ilmoraunio-conftest-clj-$VERSION-macos-aarch64.zip
+        run: bb --config bb.ci.edn release-artifact --file pod-ilmoraunio-cljconf-$VERSION-macos-aarch64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   linux-build:
@@ -63,7 +63,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
       - name: Read version to environment
-        run: echo "VERSION=$(cat resources/POD_ILMORAUNIO_CONFTEST_CLJ)" >> $GITHUB_ENV
+        run: echo "VERSION=$(cat resources/POD_ILMORAUNIO_CLJCONF)" >> $GITHUB_ENV
       - name: Install babashka
         uses: DeLaGuardo/setup-clojure@13.0
         with:
@@ -81,16 +81,16 @@ jobs:
       - name: Build pod-ilmoraunio-conftest binary
         run: cd pod-ilmoraunio-conftest && go build
       - name: Build uberjar
-        run: bb uberjar target/pod-ilmoraunio-conftest-clj.jar -m pod-ilmoraunio-conftest-clj.core
+        run: bb uberjar target/pod-ilmoraunio-cljconf.jar -m pod-ilmoraunio-cljconf.core
       - name: Build binary
-        run: cat $(which bb) target/pod-ilmoraunio-conftest-clj.jar > pod-ilmoraunio-conftest-clj && chmod +x pod-ilmoraunio-conftest-clj
+        run: cat $(which bb) target/pod-ilmoraunio-cljconf.jar > pod-ilmoraunio-cljconf && chmod +x pod-ilmoraunio-cljconf
       - name: Test build
         run: ./scripts/test
       - name: Debug
         run: ls -lart
       - name: Produce artifact
-        run: zip pod-ilmoraunio-conftest-clj-$VERSION-linux-amd64.zip pod-ilmoraunio-conftest-clj
+        run: zip pod-ilmoraunio-cljconf-$VERSION-linux-amd64.zip pod-ilmoraunio-cljconf
       - name: Release artifact
-        run: bb --config bb.ci.edn release-artifact --file pod-ilmoraunio-conftest-clj-$VERSION-linux-amd64.zip
+        run: bb --config bb.ci.edn release-artifact --file pod-ilmoraunio-cljconf-$VERSION-linux-amd64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
