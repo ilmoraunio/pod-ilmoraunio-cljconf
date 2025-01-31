@@ -1,9 +1,9 @@
-(ns pod-ilmoraunio-conftest-clj.core
+(ns pod-ilmoraunio-cljconf.core
   (:require [bencode.core :as bencode]
             [clojure.edn :as edn]
             [clojure.string :as str]
             [clojure.walk :as walk]
-            [pod-ilmoraunio-conftest-clj.api :as api])
+            [pod-ilmoraunio-cljconf.api :as api])
   (:import (java.io EOFException PushbackInputStream OutputStream))
   (:gen-class))
 
@@ -46,7 +46,7 @@
          %)
       {:format "edn"
        :readers {"ordered/map" "flatland.ordered.map/ordered-map"}
-       :namespaces [(podify-namespace 'pod-ilmoraunio-conftest-clj.api 'pod-ilmoraunio-conftest-clj.api)]})))
+       :namespaces [(podify-namespace 'pod-ilmoraunio-cljconf.api 'pod-ilmoraunio-cljconf.api)]})))
 
 (defn dispatch
   [message]
@@ -58,10 +58,10 @@
         args (-> (get message "args") bytes->string edn/read-string)
         _ (debug "args" args)
         value (case var
-                "pod-ilmoraunio-conftest-clj.api/parse" (apply api/parse args)
-                "pod-ilmoraunio-conftest-clj.api/parse-as" (apply api/parse-as args)
-                "pod-ilmoraunio-conftest-clj.api/parse-go" (apply api/parse-go args)
-                "pod-ilmoraunio-conftest-clj.api/parse-go-as" (apply api/parse-go-as args))
+                "pod-ilmoraunio-cljconf.api/parse" (apply api/parse args)
+                "pod-ilmoraunio-cljconf.api/parse-as" (apply api/parse-as args)
+                "pod-ilmoraunio-cljconf.api/parse-go" (apply api/parse-go args)
+                "pod-ilmoraunio-cljconf.api/parse-go-as" (apply api/parse-go-as args))
         _ (debug "value" value)]
     {"value" (pr-str value)
      "id" id

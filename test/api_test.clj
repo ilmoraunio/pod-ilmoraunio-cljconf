@@ -2,8 +2,8 @@
   (:require [babashka.pods :as pods]
             [clojure.test :refer [deftest is testing]]))
 
-(pods/load-pod "./pod-ilmoraunio-conftest-clj")
-(require '[pod-ilmoraunio-conftest-clj.api :as api])
+(pods/load-pod "./pod-ilmoraunio-cljconf")
+(require '[pod-ilmoraunio-cljconf.api :as api])
 
 (set! *data-readers* {'ordered/map #'flatland.ordered.map/ordered-map})
 
